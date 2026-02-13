@@ -124,7 +124,7 @@ const App: React.FC = () => {
 
             <div className="pt-4">
               <div className="inline-flex items-center gap-2 px-6 py-2 bg-rose-100 text-rose-600 rounded-full text-sm font-bold uppercase tracking-widest">
-                Our first Valentine's date pending...
+                Our Valentine's date pending...
               </div>
             </div>
 
