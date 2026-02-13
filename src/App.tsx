@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Heart, Stars, Sparkles, PartyPopper } from 'lucide-react';
+import askingImg from './assets/IMG_3960.JPG';
+import successImg from './assets/IMG_3961.JPG';
 
 /**
  * VALENTINE'S DAY PROPOSAL APP
@@ -17,12 +19,16 @@ const App: React.FC = () => {
 
   // Function to move the "No" button to a random spot
   const moveButton = useCallback(() => {
-    const randomX = Math.floor(Math.random() * 60) + 20;
-    const randomY = Math.floor(Math.random() * 60) + 20;
+    const btnWidth = 120;
+    const btnHeight = 56;
+    const maxX = window.innerWidth - btnWidth;
+    const maxY = window.innerHeight - btnHeight;
+    const randomX = Math.floor(Math.random() * (maxX - 20)) + 10;
+    const randomY = Math.floor(Math.random() * (maxY - 20)) + 10;
 
     setNoButtonPos({
-      top: `${randomY}vh`,
-      left: `${randomX}vw`,
+      top: `${randomY}px`,
+      left: `${randomX}px`,
       position: 'fixed'
     });
     setHasMoved(true);
@@ -59,7 +65,7 @@ const App: React.FC = () => {
             <div className="relative inline-block group">
               <div className="absolute -inset-1 bg-gradient-to-r from-rose-400 to-pink-500 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
               <img
-                src="https://media.tenor.com/y3_6qMv_6k8AAAAd/bubu-dudu-flower.gif"
+                src={askingImg}
                 alt="Asking"
                 className="relative w-64 h-64 mx-auto rounded-xl object-cover shadow-inner"
               />
@@ -81,21 +87,16 @@ const App: React.FC = () => {
                 <Heart size={20} className="group-hover:scale-125 transition-transform" fill="white" />
               </button>
 
-              <button
-                onMouseEnter={moveButton}
-                onTouchStart={moveButton}
-                onClick={moveButton}
-                style={hasMoved ? {
-                  position: noButtonPos.position,
-                  top: noButtonPos.top,
-                  left: noButtonPos.left,
-                  transition: 'all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1)',
-                  zIndex: 100
-                } : {}}
-                className="px-10 py-4 bg-slate-200 text-slate-500 font-bold rounded-full shadow-[0_8px_0_rgb(203,213,225)] hover:bg-slate-300 transition-colors"
-              >
-                No
-              </button>
+              {!hasMoved && (
+                <button
+                  onMouseEnter={moveButton}
+                  onTouchStart={moveButton}
+                  onClick={moveButton}
+                  className="px-10 py-4 bg-slate-200 text-slate-500 font-bold rounded-full shadow-[0_8px_0_rgb(203,213,225)] hover:bg-slate-300 transition-colors"
+                >
+                  No
+                </button>
+              )}
             </div>
           </div>
         ) : (
@@ -107,7 +108,7 @@ const App: React.FC = () => {
                 <Stars className="text-rose-400 animate-bounce" />
               </div>
               <img
-                src="https://media.tenor.com/Z8X_qEw2V78AAAAd/bubu-dudu-love.gif"
+                src={successImg}
                 alt="Success"
                 className="w-72 h-72 mx-auto rounded-full object-cover border-8 border-rose-100 shadow-2xl"
               />
@@ -152,6 +153,25 @@ const App: React.FC = () => {
           <Heart size={heart.size} fill="currentColor" />
         </div>
       ))}
+
+      {/* Escaped No button — rendered outside overflow-hidden container */}
+      {stage === 'ASKING' && hasMoved && (
+        <button
+          onMouseEnter={moveButton}
+          onTouchStart={moveButton}
+          onClick={moveButton}
+          style={{
+            position: 'fixed',
+            top: noButtonPos.top,
+            left: noButtonPos.left,
+            transition: 'all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1)',
+            zIndex: 9999
+          }}
+          className="px-10 py-4 bg-slate-200 text-slate-500 font-bold rounded-full shadow-[0_8px_0_rgb(203,213,225)] hover:bg-slate-300 transition-colors"
+        >
+          No
+        </button>
+      )}
 
       <style>{`
         @keyframes float-up {
