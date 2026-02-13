@@ -12,10 +12,16 @@ import successImg from './assets/IMG_3961.JPG';
  */
 
 const App: React.FC = () => {
-  const [stage, setStage] = useState<'ASKING' | 'SUCCESS'>('ASKING');
+  const [stage, setStage] = useState<'ASKING' | 'TRANSITIONING' | 'SUCCESS'>('ASKING');
   const [noButtonPos, setNoButtonPos] = useState<{ top: string; left: string; position: 'relative' | 'fixed' }>({ top: '0px', left: '0px', position: 'relative' });
   const [hasMoved, setHasMoved] = useState(false);
   const [hearts, setHearts] = useState<{ id: number; left: number; delay: number; size: number }[]>([]);
+
+  const handleYes = useCallback(() => {
+    setStage('TRANSITIONING');
+    setHasMoved(false);
+    setTimeout(() => setStage('SUCCESS'), 600);
+  }, []);
 
   // Function to move the "No" button to a random spot
   const moveButton = useCallback(() => {
@@ -60,8 +66,8 @@ const App: React.FC = () => {
       </div>
 
       <div className="z-10 max-w-lg w-full bg-white/80 backdrop-blur-md p-8 rounded-[2rem] shadow-2xl border-b-8 border-rose-100 text-center">
-        {stage === 'ASKING' ? (
-          <div className="space-y-8 animate-in fade-in zoom-in duration-500">
+        {stage !== 'SUCCESS' ? (
+          <div className={`space-y-8 transition-all duration-500 ${stage === 'TRANSITIONING' ? 'opacity-0 scale-90' : 'opacity-100 scale-100'}`}>
             <div className="relative inline-block group">
               <div className="absolute -inset-1 bg-gradient-to-r from-rose-400 to-pink-500 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
               <img
@@ -80,7 +86,7 @@ const App: React.FC = () => {
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-4 min-h-[120px]">
               <button
-                onClick={() => setStage('SUCCESS')}
+                onClick={handleYes}
                 className="group relative px-12 py-4 bg-rose-500 hover:bg-rose-600 text-white font-bold rounded-full shadow-[0_8px_0_rgb(190,18,60)] active:shadow-none active:translate-y-2 transition-all flex items-center gap-2"
               >
                 YES!
@@ -100,7 +106,7 @@ const App: React.FC = () => {
             </div>
           </div>
         ) : (
-          <div className="space-y-8 animate-in slide-in-from-bottom-10 duration-700">
+          <div className="space-y-8 animate-fade-in-up">
             <div className="relative">
               <div className="absolute -top-10 left-1/2 -translate-x-1/2 flex gap-4">
                 <PartyPopper className="text-yellow-500 animate-bounce" />
@@ -182,6 +188,13 @@ const App: React.FC = () => {
         }
         .animate-float-up {
           animation: float-up 6s linear infinite;
+        }
+        @keyframes fade-in-up {
+          0% { opacity: 0; transform: translateY(30px) scale(0.95); }
+          100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .animate-fade-in-up {
+          animation: fade-in-up 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) both;
         }
       `}</style>
     </div>
