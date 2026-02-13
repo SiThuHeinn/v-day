@@ -13,7 +13,7 @@ import successImg from './assets/IMG_3961.JPG';
 
 const App: React.FC = () => {
   const [stage, setStage] = useState<'ASKING' | 'SUCCESS'>('ASKING');
-  const [noButtonPos, setNoButtonPos] = useState({ top: '0px', left: '0px', position: 'relative' as const });
+  const [noButtonPos, setNoButtonPos] = useState<{ top: string; left: string; position: 'relative' | 'fixed' }>({ top: '0px', left: '0px', position: 'relative' });
   const [hasMoved, setHasMoved] = useState(false);
   const [hearts, setHearts] = useState<{ id: number; left: number; delay: number; size: number }[]>([]);
 
